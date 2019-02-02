@@ -5,7 +5,7 @@
 template <class ElementType, class KeyType, class Compare = std::less<ElementType>>
 class MaxHeap {
 public:
-    explicit MaxHeap(Compare compare) : compare_(compare) {
+    explicit MaxHeap(Compare compare = Compare()) : compare_(compare) {
     }
 
     ElementType Top() const {
