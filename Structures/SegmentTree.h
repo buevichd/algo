@@ -19,8 +19,8 @@ template <class ElementType,
 class SegmentTree {
 public:
     SegmentTree(std::vector<ElementType> data, MergeFunctor merge_functor,
-        ConvertFunctor convert_functor = IdentityConverter<ElementType>(),
-        ResultType identity = ResultType())
+        ResultType identity = ResultType(),
+        ConvertFunctor convert_functor = IdentityConverter<ElementType>())
 
         : data_(std::move(data)),
         tree_(4 * data_.size()),
@@ -36,7 +36,10 @@ public:
         }
     }
 
-    ResultType GetValue(size_t left, size_t right) {
+    ResultType GetValue(size_t left, size_t right = SIZE_MAX) {
+        if (right == SIZE_MAX) {
+            right = left + 1;
+        }
         return GetValue(0, 0, data_.size(), left, right);
     }
 
@@ -126,15 +129,15 @@ SegmentTree<ElementType, ElementType, MergeFunctor, IdentityConverter<ElementTyp
     MakeSegmentTree(std::vector<ElementType> data, MergeFunctor merge_functor, ElementType identity) {
 
     return SegmentTree<ElementType, ElementType, MergeFunctor, IdentityConverter<ElementType>>(
-        data, merge_functor, IdentityConverter<ElementType>(), identity);
+        data, merge_functor, identity, IdentityConverter<ElementType>());
 }
 
 template <class ElementType, class ResultType, class MergeFunctor, class ConvertFunctor>
 SegmentTree<ElementType, ResultType, MergeFunctor, ConvertFunctor> MakeSegmentTree(
-    std::vector<ElementType> data, MergeFunctor merge_functor, ConvertFunctor convert_functor, ResultType identity) {
+    std::vector<ElementType> data, MergeFunctor merge_functor, ResultType identity, ConvertFunctor convert_functor) {
 
     return SegmentTree<ElementType, ResultType, MergeFunctor, ConvertFunctor>(
-        data, merge_functor, convert_functor, identity);
+        data, merge_functor, identity, convert_functor);
 }
 
 using SimpleSegmentTree = SegmentTree<int, int, std::function<int(int,int)>, IdentityConverter<int>>;

@@ -10,13 +10,12 @@ T ReadNumber(istream& in = cin) {
     return number;
 }
 
-template <typename T = int>
-vector<T> ReadVector(size_t size, istream& in = cin) {
-    vector<T> result(size);
-    for (size_t i = 0; i < size; ++i) {
-        in >> result[i];
+template <class T>
+istream& operator>>(istream& in, vector<T>& elements) {
+    for (size_t i = 0; i < elements.size(); ++i) {
+        in >> elements[i];
     }
-    return result;
+    return in;
 }
 
 template <typename T = int>
