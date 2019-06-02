@@ -18,6 +18,11 @@ istream& operator>>(istream& in, vector<T>& elements) {
     return in;
 }
 
+template <class T, class V>
+istream& operator>>(istream& in, pair<T, V> pair) {
+    return in >> pair.first >> pair.second;
+}
+
 template <typename T = int>
 vector<vector<T>> ReadMatrix(size_t height, size_t width, istream& in = cin) {
     vector<vector<T>> result(height);

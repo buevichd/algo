@@ -36,6 +36,10 @@ public:
         }
     }
 
+    bool IsInSameSet(T lhs, T rhs) {
+        return FindSet(lhs) == FindSet(rhs);
+    }
+
     size_t GetSetsCount() const {
         return sets_count_;
     }

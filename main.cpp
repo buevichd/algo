@@ -1,23 +1,10 @@
-#include <iostream>
-#include <cassert>
-#include <unordered_map>
-#include <unordered_set>
-#include <map>
-#include <set>
-#include <vector>
-#include <queue>
-#include <deque>
-#include <fstream>
-#include <algorithm>
-#include <sstream>
-#include <cmath>
-#include <functional>
-#include <limits>
+#include <bits/stdc++.h>
+
+using namespace std;
 
 using ll = long long;
 using dd = double;
-
-using namespace std;
+using vi = vector<int>;
 
 template <class T>
 istream& operator>>(istream& in, vector<T>& elements) {
@@ -25,6 +12,16 @@ istream& operator>>(istream& in, vector<T>& elements) {
         in >> elements[i];
     }
     return in;
+}
+
+template <class T, class V>
+istream& operator>>(istream& in, pair<T, V> pair) {
+    return in >> pair.first >> pair.second;
+}
+
+template <class Container, class Element>
+bool Contains(const Container& container, const Element& element) {
+    return container.find(element) != container.end();
 }
 
 template <class T>
