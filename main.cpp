@@ -32,6 +32,8 @@ ostream& operator<<(ostream& out, const vector<T>& elements) {
     return out;
 }
 
+#define FOR(i,n) for(size_t i=0, i##_len=(n); i<i##_len; ++i)
+
 int main() {
     ios_base::sync_with_stdio(false);
 
