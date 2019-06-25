@@ -1,5 +1,22 @@
 #include <bits/stdc++.h>
 
+// USEFUL MERGE FUNCTORS
+template <class T>
+std::function<T(T, T)> sum_merge_functor = [](T left, T right) {
+    return left + right;
+};
+
+template <class T>
+std::function<T(T, T)> max_merge_functor = [](T left, T right) {
+    return std::max(left, right);
+};
+
+template <class T>
+std::function<T(T, T)> min_merge_functor = [](T left, T right) {
+    return std::min(left, right);
+};
+
+// SEGMENT TREE
 template<class T = int>
 class SimpleSegmentTree {
 public:
@@ -19,11 +36,19 @@ public:
         if (right == SIZE_MAX) {
             right = left + 1;
         }
+        assert(left < data_.size());
+        assert(right <= data_.size());
         return GetValue(0, 0, data_.size(), left, right);
     }
 
     void SetElement(size_t position, T new_value) {
+        assert(position < data_.size());
         SetElement(0, 0, data_.size(), position, new_value);
+    }
+
+    void UpdateElement(size_t position, T addend) {
+        assert(position < data_.size());
+        SetElement(position, GetValue(position) + addend);
     }
 
 private:
@@ -51,15 +76,15 @@ private:
                 GetValue(GetRightChild(vertex), vertex_middle, vertex_right, std::max(left, vertex_middle), right));
     }
 
-    void SetElement(size_t vertex, size_t vertex_left, size_t vertex_right, size_t position, T new_value) {
-        if (vertex_left + 1 == vertex_right) {
+    void SetElement(size_t vertex, size_t left, size_t right, size_t position, T new_value) {
+        if (left + 1 == right) {
             tree_[vertex] = new_value;
         } else {
-            size_t vertex_middle = (vertex_left + vertex_right) / 2;
-            if (position < vertex_middle) {
-                SetElement(GetLeftChild(vertex), vertex_left, vertex_middle, position, new_value);
+            size_t middle = (left + right) / 2;
+            if (position < middle) {
+                SetElement(GetLeftChild(vertex), left, middle, position, new_value);
             } else {
-                SetElement(GetRightChild(vertex), vertex_middle, vertex_right, position, new_value);
+                SetElement(GetRightChild(vertex), middle, right, position, new_value);
             }
             tree_[vertex] = merge_functor_(tree_[GetRightChild(vertex)], tree_[GetLeftChild(vertex)]);
         }
