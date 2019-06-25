@@ -1,20 +1,24 @@
-#include <bits/stdc++.h>
-
 // USEFUL MERGE FUNCTORS
 template <class T>
-std::function<T(T, T)> sum_merge_functor = [](T left, T right) {
-    return left + right;
-};
+std::function<T(T, T)> GetSumFunctor() {
+    return [](T left, T right) {
+        return left + right;
+    };
+}
 
 template <class T>
-std::function<T(T, T)> max_merge_functor = [](T left, T right) {
-    return std::max(left, right);
-};
+std::function<T(T, T)> GetMaxFunctor() {
+    return [](T left, T right) {
+        return std::max(left, right);
+    };
+}
 
 template <class T>
-std::function<T(T, T)> min_merge_functor = [](T left, T right) {
-    return std::min(left, right);
-};
+std::function<T(T, T)> GetMinFunctor(){
+    return [](T left, T right) {
+        return std::min(left, right);
+    };
+}
 
 // SEGMENT TREE
 template<class T = int>
@@ -36,7 +40,7 @@ public:
         if (right == SIZE_MAX) {
             right = left + 1;
         }
-        assert(left < data_.size());
+        assert(left <= data_.size());
         assert(right <= data_.size());
         return GetValue(0, 0, data_.size(), left, right);
     }
