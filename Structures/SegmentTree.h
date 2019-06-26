@@ -78,8 +78,9 @@ private:
             return tree_[vertex];
         }
         size_t vertex_middle = (vertex_left + vertex_right) / 2;
-        return merge_functor_(GetValue(GetLeftChild(vertex), vertex_left, vertex_middle, left, std::min(right, vertex_middle)),
-                              GetValue(GetRightChild(vertex), vertex_middle, vertex_right, std::max(left, vertex_middle), right));
+        return merge_functor_(
+                GetValue(GetLeftChild(vertex), vertex_left, vertex_middle, left, std::min(right, vertex_middle)),
+                GetValue(GetRightChild(vertex), vertex_middle, vertex_right, std::max(left, vertex_middle), right));
     }
 
     void SetElement(size_t vertex, size_t vertex_left, size_t vertex_right, size_t position,
