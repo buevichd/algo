@@ -1,7 +1,7 @@
-template <class T>
+template <class T, class V>
 class IdentityConverter {
 public:
-    T operator()(const T& obj) {
+    V operator()(const T& obj) {
         return obj;
     }
 };
@@ -9,18 +9,16 @@ public:
 /**
  * @tparam ElementType - type of stored elements
  * @tparam ResultType - type stored in the tree
- * @tparam MergeFunctor - functor ResultType(ResultType, ResultType)
- * @tparam ConvertFunctor - functor ResultType(ElementType)
  */
-template <class ElementType,
-    class ResultType,
-    class MergeFunctor,
-    class ConvertFunctor = IdentityConverter<ElementType>>
+template <class ElementType, class ResultType>
 class SegmentTree {
 public:
+    using MergeFunctor = std::function<ResultType(ResultType, ResultType)>;
+    using ConvertFunctor = std::function<ResultType(ElementType)>;
+
     SegmentTree(std::vector<ElementType> data, MergeFunctor merge_functor,
         ResultType identity = ResultType(),
-        ConvertFunctor convert_functor = IdentityConverter<ElementType>())
+        ConvertFunctor convert_functor = IdentityConverter<ElementType, ResultType>())
 
         : data_(std::move(data)),
         tree_(4 * data_.size()),
@@ -123,21 +121,3 @@ private:
         return 2 * vertex + 2;
     }
 };
-
-template <class ElementType, class MergeFunctor>
-SegmentTree<ElementType, ElementType, MergeFunctor, IdentityConverter<ElementType>>
-    MakeSegmentTree(std::vector<ElementType> data, MergeFunctor merge_functor, ElementType identity) {
-
-    return SegmentTree<ElementType, ElementType, MergeFunctor, IdentityConverter<ElementType>>(
-        data, merge_functor, identity, IdentityConverter<ElementType>());
-}
-
-template <class ElementType, class ResultType, class MergeFunctor, class ConvertFunctor>
-SegmentTree<ElementType, ResultType, MergeFunctor, ConvertFunctor> MakeSegmentTree(
-    std::vector<ElementType> data, MergeFunctor merge_functor, ResultType identity, ConvertFunctor convert_functor) {
-
-    return SegmentTree<ElementType, ResultType, MergeFunctor, ConvertFunctor>(
-        data, merge_functor, identity, convert_functor);
-}
-
-using SimpleSegmentTree = SegmentTree<int, int, std::function<int(int,int)>, IdentityConverter<int>>;
