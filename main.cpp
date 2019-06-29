@@ -6,6 +6,8 @@ using ll = long long;
 using dd = double;
 using vi = vector<int>;
 using vl = vector<ll>;
+using vd = vector<dd>;
+using vb = vector<bool>;
 
 template <class T, class V>
 istream& operator>>(istream& in, pair<T, V>& pair) {
@@ -43,7 +45,7 @@ ostream& operator<<(ostream& out, const pair<T, V>& pair) {
 
 int main() {
     ios_base::sync_with_stdio(false);
-
+    
     
     
     return 0;
