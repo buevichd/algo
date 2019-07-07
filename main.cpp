@@ -37,7 +37,7 @@ ostream& operator<<(ostream& out, const vector<T>& elements) {
 
 template <class T, class V>
 ostream& operator<<(ostream& out, const pair<T, V>& pair) {
-    out << pair.first << ' ' << pair.second;
+    return out << pair.first << ' ' << pair.second;
 }
 
 #define FOR(i,n) for(size_t i=0, i##_len=(n); i<i##_len; ++i)
