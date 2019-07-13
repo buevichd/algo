@@ -1,9 +1,3 @@
-#include <cassert>
-#include <vector>
-#include <unordered_map>
-
-using namespace std;
-
 int64_t InverseMod(int64_t number, int64_t mod);
 
 int64_t Plus(int64_t a, int64_t b, int64_t mod) {
@@ -32,6 +26,23 @@ int64_t Pow(int64_t number, int64_t degree, int64_t mod) {
         result = Mult(result, number, mod);
     }
     return result;
+}
+
+int64_t Factorial(int64_t number, int64_t mod) {
+    int64_t result = 1;
+    for (size_t i = 2; i <= number; ++i) {
+        result = Mult(result, i, mod);
+    }
+    return result;
+}
+
+int64_t Binomial(int64_t n, int64_t k, int64_t mod) {
+    assert(n > 0 && k >= 0 && n >= k);
+    return Divide(Factorial(n, mod), Mult(Factorial(k, mod), Factorial(n - k, mod), mod), mod);
+}
+
+int64_t BinomialWithRepeats(int64_t n, int64_t k, int64_t mod) {
+    return Binomial(n + k - 1, k, mod);
 }
 
 int64_t GcdExtended(int64_t a, int64_t b, int64_t& x, int64_t& y) {
