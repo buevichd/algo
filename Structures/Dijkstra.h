@@ -6,20 +6,19 @@
 
 // INTERFACE
 
-struct Edge {
-    int target_vertex;
-    int weight;
-};
+using Vertex = size_t;
+using Distance = long long;
+using Graph = std::vector<std::unordered_map<Vertex, Distance>>;
 
-using Graph = std::vector<std::vector<Edge>>;
+int Dijkstra(const Graph& graph, Vertex start_vertex, Vertex finish_vertex);
 
-int Dijkstra(const Graph* graph, int start_vertex, int finish_vertex);
+std::vector<Distance> Dijkstra(const Graph& graph, Vertex start_vertex);
 
 // IMPLEMENTATION
 
 struct DijkstraVertex {
-    int index;
-    int distance;
+    Vertex index;
+    Distance distance;
 };
 
 class DijkstraVertexHeap {
@@ -44,7 +43,7 @@ public:
         ShiftDown(0);
     }
     
-    void DecreaseDistance(int vertex_index, int new_distance) {
+    void DecreaseDistance(Vertex vertex_index, Distance new_distance) {
         size_t node_index = vertexes_index_to_node_index_.at(vertex_index);
         assert(new_distance < nodes_[node_index].distance);
         nodes_[node_index].distance = new_distance;
@@ -55,12 +54,12 @@ public:
         return nodes_.empty();
     }
     
-    bool Contains(int vertex_index) {
+    bool Contains(Vertex vertex_index) {
         return vertexes_index_to_node_index_.find(vertex_index) !=
                vertexes_index_to_node_index_.end();
     }
     
-    DijkstraVertex GetVertex(int vertex_index) {
+    DijkstraVertex GetVertex(Vertex vertex_index) {
         return nodes_[vertexes_index_to_node_index_.at(vertex_index)];
     }
 
@@ -111,28 +110,27 @@ private:
         }
     }
     
-    void ShiftDown(size_t index) {
-        size_t index_to_swap;
-        do {
-            index_to_swap = index;
-            if (HasLeftChild(index) && ShouldSwap(index, GetLeftChild(index))) {
-                index_to_swap = GetLeftChild(index);
+    void ShiftDown(size_t vertex) {
+        while ((HasLeftChild(vertex) && ShouldSwap(vertex, GetLeftChild(vertex))) ||
+               (HasRightChild(vertex) && ShouldSwap(vertex, GetRightChild(vertex)))) {
+        
+            Vertex vertex_to_swap = GetLeftChild(vertex);
+            if (HasRightChild(vertex) && ShouldSwap(vertex_to_swap, GetRightChild(vertex))) {
+                vertex_to_swap = GetRightChild(vertex);
             }
-            if (HasRightChild(index) && ShouldSwap(index_to_swap, GetRightChild(index))) {
-                index_to_swap = GetRightChild(index);
-            }
-            if (index == index_to_swap) {
-                break;
-            }
-            SwapNodes(index, index_to_swap);
-            index = index_to_swap;
-        } while (index != index_to_swap);
+            SwapNodes(vertex, vertex_to_swap);
+            vertex = vertex_to_swap;
+        }
     }
 };
 
-int Dijkstra(const Graph* graph, int start_vertex, int finish_vertex) {
+int Dijkstra(const Graph& graph, Vertex start_vertex, Vertex finish_vertex) {
+    return Dijkstra(graph, start_vertex)[finish_vertex];
+}
+
+std::vector<Distance> Dijkstra(const Graph& graph, Vertex start_vertex) {
     static constexpr int kInfDistance = -1;
-    std::vector<int> proved_distances(graph->size(), kInfDistance);
+    std::vector<Distance> proved_distances(graph.size(), kInfDistance);
     
     DijkstraVertexHeap reached_vertex_min_heap;
     reached_vertex_min_heap.PushVertex({start_vertex, 0});
@@ -140,16 +138,12 @@ int Dijkstra(const Graph* graph, int start_vertex, int finish_vertex) {
     while (!reached_vertex_min_heap.Empty()) {
         const DijkstraVertex& dijkstra_vertex = reached_vertex_min_heap.GetMinVertex();
         reached_vertex_min_heap.PopMinVertex();
-        if (dijkstra_vertex.index == finish_vertex) {
-            return dijkstra_vertex.distance;
-        }
         proved_distances[dijkstra_vertex.index] = dijkstra_vertex.distance;
-        for (const Edge& edge : (*graph)[dijkstra_vertex.index]) {
-            int target_vertex = edge.target_vertex;
+        for (const auto& [target_vertex, weight] : graph[dijkstra_vertex.index]) {
             if (proved_distances[target_vertex] != kInfDistance) {
                 continue;
             }
-            int new_distance = dijkstra_vertex.distance + edge.weight;
+            int new_distance = dijkstra_vertex.distance + weight;
             if (!reached_vertex_min_heap.Contains(target_vertex)) {
                 reached_vertex_min_heap.PushVertex({target_vertex, new_distance});
             } else if (new_distance < reached_vertex_min_heap.GetVertex(target_vertex).distance) {
@@ -157,5 +151,5 @@ int Dijkstra(const Graph* graph, int start_vertex, int finish_vertex) {
             }
         }
     }
-    return -1;
+    return proved_distances;
 }
