@@ -1,10 +1,3 @@
-#pragma once
-
-#include <cstddef>
-#include <vector>
-
-using namespace std;
-
 template <class T = int>
 class DisjointSetUnion {
 public:

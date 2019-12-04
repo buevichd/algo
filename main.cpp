@@ -47,6 +47,7 @@ ostream& operator<<(ostream& out, const pair<T, V>& pair) {
 }
 
 #define FOR(i,n) for(size_t i=0, i##_len=(n); i<i##_len; ++i)
+#define FORF(i,f,n) for(size_t i=(f), i##_len=(n); i<i##_len; ++i)
 #define SORT(c) sort((c).begin(), (c).end())
 #define SUM(c) accumulate((c).begin(), (c).end(), 0ll)
 
